@@ -158,18 +158,17 @@ async function findMap(mapName) {
 }
 
 // Usage
-// findInDir('./public/audio/', /\.mp3$/);
+// findInDir('./public/audio/', '.mp3');
 function findInDir(dir, suffix, fileList = []) {
   const files = fs.readdirSync(dir);
-  const filter = new RegExp(`\\.${suffix}$`);
 
   files.forEach(file => {
     const filePath = path.join(dir, file);
     const fileStat = fs.lstatSync(filePath);
 
     if (fileStat.isDirectory()) {
-      findInDir(filePath, filter, fileList);
-    } else if (filter.test(filePath)) {
+      findInDir(filePath, suffix, fileList);
+    } else if (path.extname(filePath) === suffix) {
       fileList.push(path.basename(filePath, SUFFIX));
     }
   });
