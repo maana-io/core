@@ -157,8 +157,29 @@ async function findMap(mapName) {
   throw new Error(`Map "${mapName}" not found`);
 }
 
+// Usage
+// findInDir('./public/audio/', /\.mp3$/);
+function findInDir(dir, suffix, fileList = []) {
+  const files = fs.readdirSync(dir);
+  const filter = new RegExp(`\\.${suffix}$`);
+
+  files.forEach(file => {
+    const filePath = path.join(dir, file);
+    const fileStat = fs.lstatSync(filePath);
+
+    if (fileStat.isDirectory()) {
+      findInDir(filePath, filter, fileList);
+    } else if (filter.test(filePath)) {
+      fileList.push(path.basename(filePath, SUFFIX));
+    }
+  });
+
+  return fileList;
+}
+
 async function listMaps() {
-  throw new Error(`Map "ALLURBASE" not found`);
+  const mapPath = path.join(basePath, MAP_DIR);
+  return findInDir(mapPath, SUFFIX);
 }
 
 module.exports = { launcher, findMap, listMaps };
