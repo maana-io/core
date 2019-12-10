@@ -169,7 +169,7 @@ function findInDir(dir, suffix, fileList = []) {
     if (fileStat.isDirectory()) {
       findInDir(filePath, suffix, fileList);
     } else if (path.extname(filePath) === suffix) {
-      fileList.push(path.basename(filePath, SUFFIX));
+      fileList.push(filePath);
     }
   });
 
